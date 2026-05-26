@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <title>Quiz Zone — StudyMate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <style>
+    .quiz-wrapper {
+      max-width: 700px; margin: 0 auto;
+      padding: 40px 24px 100px;
+    }
+    .subject-selector {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .subj-select-btn {
+      padding: 20px 16px;
+      background: var(--blue-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--white);
+      font-family: var(--font-head);
+      font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      text-align: center;
+    }
+    .subj-select-btn .s-icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+    .subj-select-btn:hover, .subj-select-btn.active {
+      border-color: var(--saffron);
+      background: rgba(255,107,26,0.1);
+    }
+    #quizContainer {
+      background: var(--blue-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      min-height: 300px;
+    }
+    .quiz-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px;
+    }
+    .q-counter { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+    .q-score {
+      background: rgba(255,107,26,0.15);
+      color: var(--saffron);
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 700;
+    }
+    .q-progress {
+      height: 4px; background: rgba(255,255,255,0.08);
+      border-radius: 2px; margin-bottom: 32px; overflow: hidden;
+    }
+    .q-progress-bar { height: 100%; background: var(--saffron); border-radius: 2px; transition: width 0.4s; }
+    .question-text {
+      font-size: 1.3rem; font-weight: 700;
+      margin-bottom: 28px; line-height: 1.5;
+    }
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .option-btn {
+      padding: 16px 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-sm);
+      color: var(--white);
+      font-family: var(--font-head);
+      font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      text-align: left;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--saffron);
+      background: rgba(255,107,26,0.1);
+    }
+    .option-btn.correct { border-color: var(--green); background: rgba(19,136,8,0.15); }
+    .option-btn.wrong { border-color: #E53E3E; background: rgba(229,62,62,0.1); }
+    .opt-label {
+      width: 28px; height: 28px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+    }
+    .quiz-result { text-align: center; padding: 20px 0; }
+    .result-emoji { font-size: 5rem; display: block; margin-bottom: 16px; }
+    .quiz-result h2 { font-size: 2rem; font-weight: 800; margin-bottom: 12px; }
+    .quiz-result p { color: var(--text-muted); margin-bottom: 8px; }
+    .score-highlight { color: var(--saffron); font-size: 1.4rem; font-weight: 800; }
+    .quiz-result .btn-hero-primary { margin-top: 24px; display: inline-block; cursor: pointer; border: none; font-family: var(--font-head); }
+    .quiz-placeholder { text-align: center; padding: 60px 0; }
+    .quiz-placeholder .ph-icon { font-size: 4rem; margin-bottom: 16px; display: block; }
+    .quiz-placeholder p { color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+<nav class="navbar scrolled" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo"><span class="logo-icon">🌾</span><span class="logo-text">StudyMate</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="courses.html">Courses</a></li>
+      <!-- <li><a href="subjects.html">Subjects</a></li> -->
+      <li><a href="quiz.html" class="active">Quiz</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="login.html" class="btn-outline">Login</a>
+      <a href="register.html" class="btn-primary">Join Free</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Quiz Zone 🧠</h1>
+  <p>Test your knowledge and earn points! Choose a subject to begin.</p>
+</div>
+
+<div class="quiz-wrapper">
+  <div class="subject-selector">
+    <button class="subj-select-btn" onclick="selectSubject('math', this)">
+      <span class="s-icon">📐</span>Mathematics
+    </button>
+    <button class="subj-select-btn" onclick="selectSubject('science', this)">
+      <span class="s-icon">🔬</span>Science
+    </button>
+    <!-- <button class="subj-select-btn" onclick="selectSubject('hindi', this)">
+      <span class="s-icon">📖</span>Hindi
+    </button> -->
+    <button class="subj-select-btn" onclick="selectSubject('english', this)">
+      <span class="s-icon">🔤</span>English
+    </button>
+    <button class="subj-select-btn" onclick="selectSubject('gk', this)">
+      <span class="s-icon">🌍</span>General Knowledge
+    </button>
+    <button class="subj-select-btn" onclick="selectSubject('computer', this)">
+      <span class="s-icon">💻</span>Computer
+    </button>
+  </div>
+
+  <div id="quizContainer">
+    <div class="quiz-placeholder">
+      <span class="ph-icon">🎯</span>
+      <p>Select a subject above to start the quiz!</p>
+    </div>
+  </div>
+</div>
+
+<script src="../js/main.js"></script>
+<script>
+const allQuestions = {
+  math: [
+    { question: "What is 7 × 8?", options: ["54", "56", "64", "48"], answer: 1 },
+    { question: "What is √144?", options: ["11", "12", "13", "14"], answer: 1 },
+    { question: "What is 25% of 200?", options: ["25", "40", "50", "75"], answer: 2 },
+    { question: "What is the area of a circle with radius 7 cm? (π=22/7)", options: ["44 cm²", "154 cm²", "176 cm²", "132 cm²"], answer: 1 },
+    { question: "Solve: 2x + 5 = 15. What is x?", options: ["3", "4", "5", "6"], answer: 2 },
+  ],
+  science: [
+    { question: "Water boils at which temperature (at sea level)?", options: ["90°C", "95°C", "100°C", "110°C"], answer: 2 },
+    { question: "Which gas do plants absorb from the atmosphere?", options: ["Oxygen", "Nitrogen", "CO₂", "Hydrogen"], answer: 2 },
+    { question: "Which planet is closest to the Sun?", options: ["Venus", "Mercury", "Earth", "Mars"], answer: 1 },
+    { question: "What is the chemical formula of water?", options: ["H₂O₂", "HO₂", "H₂O", "HO"], answer: 2 },
+    { question: "What force keeps planets in orbit around the Sun?", options: ["Magnetic force", "Nuclear force", "Gravity", "Friction"], answer: 2 },
+  ],
+  english: [
+    { question: "Which is the correct sentence?", options: ["She go to school", "She goes to school", "She going to school", "She gone to school"], answer: 1 },
+    { question: "The synonym of 'happy' is:", options: ["Sad", "Joyful", "Angry", "Tired"], answer: 1 },
+    { question: "Opposite of 'ancient' is:", options: ["Old", "Big", "Modern", "Small"], answer: 2 },
+    { question: "Which is a proper noun?", options: ["city", "river", "Delhi", "mountain"], answer: 2 },
+    { question: "She _____ to school yesterday. (past tense of go)", options: ["goes", "going", "gone", "went"], answer: 3 },
+  ],
+  gk: [
+    { question: "What is the capital of India?", options: ["Mumbai", "Kolkata", "New Delhi", "Chennai"], answer: 2 },
+    { question: "How many states are there in India?", options: ["28", "29", "30", "31"], answer: 0 },
+    { question: "Who is known as the 'Father of the Nation' in India?", options: ["Nehru", "Ambedkar", "Gandhi", "Bose"], answer: 2 },
+    { question: "The national animal of India is:", options: ["Lion", "Elephant", "Tiger", "Peacock"], answer: 2 },
+    { question: "Which river is the longest in India?", options: ["Yamuna", "Ganga", "Godavari", "Brahmaputra"], answer: 3 },
+  ],
+  computer: [
+    { question: "CPU stands for:", options: ["Central Power Unit", "Central Processing Unit", "Computer Processing Unit", "Control Processing Unit"], answer: 1 },
+    { question: "Which of these is an input device?", options: ["Monitor", "Printer", "Speaker", "Keyboard"], answer: 3 },
+    { question: "The Internet was invented in which decade?", options: ["1960s", "1970s", "1980s", "1990s"], answer: 0 },
+    { question: "1 KB is equal to how many bytes?", options: ["100", "512", "1000", "1024"], answer: 3 },
+    { question: "Which language is called the 'mother' of all programming languages?", options: ["FORTRAN", "COBOL", "C", "Assembly"], answer: 0 },
+  ]
+};
+
+let currentQuestion = 0, score = 0, quizData = [];
+
+function selectSubject(subject, btn) {
+  document.querySelectorAll('.subj-select-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentQuestion = 0;
+  score = 0;
+  quizData = allQuestions[subject];
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const container = document.getElementById('quizContainer');
+  if (currentQuestion >= quizData.length) {
+    container.innerHTML = `
+      <div class="quiz-result">
+        <span class="result-emoji">${score >= 4 ? '🏆' : score >= 3 ? '🎉' : '📚'}</span>
+        <h2>Quiz Complete!</h2>
+        <p>You scored <span class="score-highlight">${score} / ${quizData.length}</span></p>
+        <p>${score === 5 ? '🌟 Perfect Score! You are amazing!' : score >= 3 ? '👍 Great effort! Keep learning!' : '💪 Study more and try again!'}</p>
+        <button class="btn-hero-primary" onclick="currentQuestion=0;score=0;renderQuestion()">Try Again ↻</button>
+      </div>`;
+    return;
+  }
+  const q = quizData[currentQuestion];
+  const pct = (currentQuestion / quizData.length) * 100;
+  container.innerHTML = `
+    <div class="quiz-header">
+      <span class="q-counter">Question ${currentQuestion + 1} of ${quizData.length}</span>
+      <span class="q-score">⭐ Score: ${score}</span>
+    </div>
+    <div class="q-progress"><div class="q-progress-bar" style="width:${pct}%"></div></div>
+    <div class="question-text">${q.question}</div>
+    <div class="options-grid">
+      ${q.options.map((opt, i) => `
+        <button class="option-btn" onclick="selectOption(${i}, ${q.answer})">
+          <span class="opt-label">${String.fromCharCode(65+i)}</span> ${opt}
+        </button>`).join('')}
+    </div>`;
+}
+
+function selectOption(selected, correct) {
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === correct) btn.classList.add('correct');
+    else if (i === selected) btn.classList.add('wrong');
+  });
+  if (selected === correct) score++;
+  setTimeout(() => { currentQuestion++; renderQuestion(); }, 1100);
+}
+</script>
+</body>
+</html>

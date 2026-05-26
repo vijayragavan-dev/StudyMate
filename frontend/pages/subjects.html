@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Subjects — StudyMate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <style>
+    .subjects-wrapper { max-width: 1100px; margin: 0 auto; padding: 40px 24px 100px; }
+    .subject-detail {
+      display: grid; grid-template-columns: 280px 1fr; gap: 40px;
+      align-items: start;
+    }
+    .subject-sidebar {
+      background: var(--blue-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: sticky; top: 90px;
+    }
+    .sidebar-item {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      display: flex; align-items: center; gap: 12px;
+      transition: all 0.2s;
+      font-weight: 600; font-size: 0.9rem;
+    }
+    .sidebar-item:hover, .sidebar-item.active {
+      background: rgba(255,107,26,0.1);
+      color: var(--saffron);
+    }
+    .sidebar-item:last-child { border-bottom: none; }
+    .s-ico { font-size: 1.4rem; }
+    .lessons-list { }
+    .lesson-item {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--blue-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .lesson-item:hover { border-color: rgba(255,107,26,0.3); transform: translateX(4px); }
+    .lesson-num {
+      width: 36px; height: 36px;
+      background: rgba(255,107,26,0.12);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; color: var(--saffron); flex-shrink: 0;
+    }
+    .lesson-info { flex: 1; }
+    .lesson-info h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 2px; }
+    .lesson-info span { font-size: 0.78rem; color: var(--text-muted); }
+    .lesson-icon { font-size: 1.2rem; }
+    .lesson-done { color: var(--green); }
+    .subj-hero {
+      background: var(--blue-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 24px;
+      display: flex; align-items: center; gap: 24px;
+    }
+    .subj-hero-icon { font-size: 4rem; }
+    .subj-hero h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 6px; }
+    .subj-hero p { color: var(--text-muted); font-size: 0.9rem; }
+    .subj-stats { display: flex; gap: 24px; margin-top: 16px; }
+    .subj-stat { font-size: 0.8rem; color: var(--text-muted); }
+    .subj-stat strong { color: var(--saffron); font-size: 1.1rem; display: block; }
+  </style>
+</head>
+<body>
+<nav class="navbar scrolled" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo"><span class="logo-icon">🌾</span><span class="logo-text">StudyMate</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="courses.html">Courses</a></li>
+      <li><a href="subjects.html" class="active">Subjects</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="login.html" class="btn-outline">Login</a>
+      <a href="register.html" class="btn-primary">Join Free</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Subjects 📘</h1>
+  <p>Browse all subjects — NCERT aligned, available offline</p>
+</div>
+
+<div class="subjects-wrapper">
+  <div class="subject-detail">
+    <div class="subject-sidebar">
+      <div class="sidebar-item active" data-subj="math" onclick="loadSubject('math', this)">
+        <span class="s-ico">📐</span> Mathematics
+      </div>
+      <div class="sidebar-item" data-subj="science" onclick="loadSubject('science', this)">
+        <span class="s-ico">🔬</span> Science
+      </div>
+      <!-- <div class="sidebar-item" data-subj="hindi" onclick="loadSubject('hindi', this)">
+        <span class="s-ico">📖</span> Hindi
+      </div> -->
+      <div class="sidebar-item" data-subj="english" onclick="loadSubject('english', this)">
+        <span class="s-ico">🔤</span> English
+      </div>
+      <div class="sidebar-item" data-subj="social" onclick="loadSubject('social', this)">
+        <span class="s-ico">🌍</span> Social Studies
+      </div>
+      <div class="sidebar-item" data-subj="computer" onclick="loadSubject('computer', this)">
+        <span class="s-ico">💻</span> Computer Science
+      </div>
+      <div class="sidebar-item" data-subj="Tamil" onclick="loadSubject('Tamil', this)">
+        <span class="s-ico">T</span> தமிழ்
+      </div>
+    </div>
+    <div id="subjectContent"></div>
+  </div>
+</div>
+
+<script src="../js/main.js"></script>
+<script>
+const subjectData = {
+  math: {
+    icon: '📐', title: 'Mathematics', desc: 'From counting to calculus — master math at every level.',
+    lessons: 120, enrolled: 12400,
+    topics: [
+      { n:'Number System', dur:'45 min', done:true,link: "math.html"},
+      { n:'Fractions & Decimals', dur:'50 min', done:true },
+      { n:'Algebra Basics', dur:'60 min', done:false },
+      // { n:'Geometry — Lines & Angles', dur:'55 min', done:false },
+      // { n:'Mensuration — Area & Perimeter', dur:'65 min', done:false },
+      { n:'Probability', dur:'70 min', done:false },
+      // { n:'Coordinate Geometry', dur:'60 min', done:false },
+      // { n:'Quadratic Equations', dur:'80 min', done:false },
+    ]
+    
+  },
+  science: {
+    icon: '🔬', title: 'Science', desc: 'Explore the wonders of Physics, Chemistry and Biology.',
+    lessons: 95, enrolled: 9800,
+    topics: [
+      { n:'Motion & Force', dur:'55 min', done:true },
+      { n:'Light & Sound', dur:'60 min', done:false},
+      { n:'Electricity & Circuits', dur:'65 min', done:false },
+      { n:'Atoms & Molecules', dur:'70 min', done:false },
+      { n:'Cell — Basic Unit of Life', dur:'50 min', done:false },
+      { n:'Photosynthesis', dur:'45 min', done:false },
+      { n:'Human Body Systems', dur:'80 min', done:false },
+      { n:'Environment & Ecology', dur:'55 min', done:false },
+    ]
+  },
+  hindi: {
+    icon: '📖', title: 'Hindi', desc: 'अपनी मातृभाषा में पढ़ें — व्याकरण से साहित्य तक।',
+    lessons: 80, enrolled: 15200,
+    topics: [
+      { n:'वर्णमाला और उच्चारण', dur:'40 min', done:true },
+      { n:'संज्ञा और सर्वनाम', dur:'50 min', done:true },
+      { n:'क्रिया और विशेषण', dur:'45 min', done:false },
+      { n:'काल — भूत, वर्तमान, भविष्य', dur:'55 min', done:false },
+      { n:'समास और संधि', dur:'60 min', done:false },
+      { n:'पत्र लेखन', dur:'50 min', done:false },
+      { n:'निबंध लेखन', dur:'65 min', done:false },
+    ]
+  },
+  english: {
+    icon: '🔤', title: 'English', desc: 'Build strong English skills for life and exams.',
+    lessons: 75, enrolled: 11000,
+    topics: [
+      { n:'Parts of Speech', dur:'50 min', done:false },
+      { n:'Tenses — All 12 Forms', dur:'70 min', done:false },
+      { n:'Active & Passive Voice', dur:'55 min', done:false },
+      { n:'Reading Comprehension', dur:'60 min', done:false },
+      { n:'Letter & Essay Writing', dur:'65 min', done:false },
+      { n:'Vocabulary Building', dur:'45 min', done:false },
+    ]
+  },
+  social: {
+    icon: '🌍', title: 'Social Studies', desc: 'History, Geography and Civics for curious minds.',
+    lessons: 60, enrolled: 8700,
+    topics: [
+      { n:'Ancient Indian History', dur:'60 min', done:false },
+      { n:'Freedom Struggle', dur:'70 min', done:false },
+      { n:'Indian Constitution', dur:'55 min', done:false },
+      { n:'Physical Geography of India', dur:'65 min', done:false },
+      { n:'Climate & Agriculture', dur:'50 min', done:false },
+      { n:'World Geography', dur:'60 min', done:false },
+    ]
+  },
+  computer: {
+    icon: '💻', title: 'Computer Science', desc: 'Digital literacy and programming for the future.',
+    lessons: 45, enrolled: 6200,
+    topics: [
+      { n:'Introduction to Computers', dur:'40 min', done:false },
+      { n:'MS Word & Presentations', dur:'55 min', done:false },
+      { n:'Internet & Email Safety', dur:'45 min', done:false },
+      { n:'Scratch Programming', dur:'60 min', done:false },
+      { n:'Python Basics', dur:'90 min', done:false },
+      { n:'HTML & Web Pages', dur:'75 min', done:false },
+    ]
+  },
+  Tamil: {
+    icon: '🕉️', title: 'Tamil', desc: 'Digital literacy and programming for the future.',
+    lessons: 45, enrolled: 6200,
+    topics: [
+      { n:'Introduction to Computers', dur:'40 min', done:false },
+      { n:'MS Word & Presentations', dur:'55 min', done:false },
+      { n:'Internet & Email Safety', dur:'45 min', done:false },
+      { n:'Scratch Programming', dur:'60 min', done:false },
+      { n:'Python Basics', dur:'90 min', done:false },
+      { n:'HTML & Web Pages', dur:'75 min', done:false },
+    ]
+  }
+};
+
+function loadSubject(subj, el) {
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  const d = subjectData[subj];
+  document.getElementById('subjectContent').innerHTML = `
+    <div class="subj-hero">
+      <div class="subj-hero-icon">${d.icon}</div>
+      <div>
+        <h2>${d.title}</h2>
+        <p>${d.desc}</p>
+        <div class="subj-stats">
+          <div class="subj-stat"><strong>${d.lessons}</strong>Lessons</div>
+          <div class="subj-stat"><strong>${d.enrolled.toLocaleString()}</strong>Enrolled</div>
+        </div>
+      </div>
+    </div>
+    <div class="lessons-list">
+      ${d.topics.map((t, i) => `
+        <div class="lesson-item" onclick="${t.link ? `window.location.href='${t.link}'` : `showToast('▶ Opening: ${t.n}', 'success')`}">
+          <div class="lesson-num">${i+1}</div>
+          <div class="lesson-info">
+            <h4>${t.n}</h4>
+            <span>⏱ ${t.dur}</span>
+          </div>
+          <span class="lesson-icon">${t.done ? '✅' : '▶️'}</span>
+        </div>`).join('')}
+    </div>`;
+    
+}
+
+loadSubject('math', document.querySelector('.sidebar-item'));
+</script>
+</body>
+</html>

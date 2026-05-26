@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <title>Courses — StudyMate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <style>
+    .courses-wrapper { max-width: 1200px; margin: 0 auto; padding: 40px 24px 100px; }
+    .filter-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
+    .filter-btn {
+      padding: 8px 20px;
+      border-radius: 50px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-head);
+      font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--saffron);
+      color: var(--saffron);
+      background: rgba(255,107,26,0.08);
+    }
+    .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+    .course-card {
+      background: var(--blue-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .course-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); border-color: rgba(255,107,26,0.3); }
+    .course-thumb {
+      height: 140px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem;
+      position: relative;
+    }
+    .thumb-math { background: linear-gradient(135deg, #1a1f4e, #2a3580); }
+    .thumb-sci { background: linear-gradient(135deg, #0d2b1e, #1a5c38); }
+    .thumb-hindi { background: linear-gradient(135deg, #2b1a0d, #7a3a10); }
+    .thumb-eng { background: linear-gradient(135deg, #0d2020, #0f5c5c); }
+    .thumb-soc { background: linear-gradient(135deg, #1a0d2b, #4a1570); }
+    .thumb-comp { background: linear-gradient(135deg, #0d1a0d, #1a5c1a); }
+    .course-badge {
+      position: absolute; top: 12px; right: 12px;
+      background: var(--saffron);
+      color: white; font-size: 0.65rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .course-body { padding: 20px; }
+    .course-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .course-class { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .course-lessons { font-size: 0.75rem; color: var(--saffron-light); font-weight: 600; }
+    .course-body h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .course-body p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+    .progress-row { margin-bottom: 12px; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
+    .progress-track { height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+    .progress-bar { height: 100%; background: var(--saffron); border-radius: 2px; width: 0; transition: width 0.8s ease; }
+    .btn-enroll {
+      display: block; width: 100%;
+      padding: 12px;
+      background: rgba(255,107,26,0.12);
+      border: 1.5px solid rgba(255,107,26,0.3);
+      color: var(--saffron);
+      font-family: var(--font-head);
+      font-size: 0.9rem; font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer; transition: all 0.2s;
+      text-align: center;
+    }
+    .btn-enroll:hover { background: var(--saffron); color: white; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar scrolled" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo"><span class="logo-icon">🌾</span><span class="logo-text">StudyMate</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="courses.html" class="active">Courses</a></li>
+      <!-- <li><a href="subjects.html">Subjects</a></li> -->
+      <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="login.html" class="btn-outline">Login</a>
+      <a href="register.html" class="btn-primary">Join Free</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>All Courses 📚</h1>
+  <p>NCERT-aligned curriculum for Class 1–12, available in 2+ Indian languages</p>
+</div>
+
+<div class="courses-wrapper">
+  <div class="filter-bar">
+    <!-- <button class="filter-btn active" data-filter="all">All Classes</button> -->
+    <button class="filter-btn active" data-filter="primary">Primary (1–5)</button>
+    <button class="filter-btn" data-filter="middle">Middle (6–8)</button>
+    <button class="filter-btn" data-filter="secondary">Secondary (9–10)</button>
+    <button class="filter-btn" data-filter="senior">Senior (11–12)</button>
+  </div>
+  <div class="courses-grid" id="coursesGrid">
+    <!-- Populated by JS -->
+  </div>
+</div>
+
+<script src="../js/main.js"></script>
+<script>
+const courses = [
+  { icon:'தமிழ்', thumb:'thumb-tam', title:'Tamil Class', class:'Class 1-5',link:'cour/1-5/tamil.html',subject:'tam', lessons:15, desc:'உயிர் எழுத்துக்கள்,மெய் எழுத்துக்கள்,உயிர்மெய் எழுத்துக்கள்.', progress:0, badge:'New', level:'primary',  },
+  { icon:'🔤', thumb:'thumb-eng', title:'English Class', class:'Class 1-5',link:'cour/1-5/english.html', subject:'eng', lessons:15, desc:'Tenses, vocabulary, reading comprehension and creative writing.', progress:0, badge:'New', level:'primary' },
+  { icon:'📐', thumb:'thumb-math', title:'Mathematics Class', class:'Class 1-5',link:'cour/1-5/math.html', subject:'math', lessons:15,  progress:0, badge:'New', level:'primary' },
+  { icon:'🔬', thumb:'thumb-sci', title:'Science Class', class:'Class 1-5',link:'cour/1-5/science.html', subject:'sci', lessons:15,  progress:0, badge:'New', level:'primary' },
+  { icon:'🌍', thumb:'thumb-soc', title:'social Class', class:'Class 1-5',link:'cour/1-5/social.html', subject:'soc', lessons:15,  progress:0, badge:'New', level:'primary' },
+
+  { icon:'தமிழ்', thumb:'thumb-tam', title:'Tamil Class', class:'Class 1-5',link:'cour/6-8/tamil.html', subject:'tam', lessons:15,  progress:0, badge:'New', level:'middle' },
+  { icon:'🔤', thumb:'thumb-eng', title:'English Class', class:'Class 1-5',link:'cour/6-8/english.html', subject:'eng', progress:0, badge:'New', level:'middle' },
+  { icon:'📐', thumb:'thumb-math', title:'Mathematics Class', class:'Class 1-5',link:'cour/6-8/maths.html', subject:'math', lessons:15,progress:0, badge:'New', level:'middle' },
+  { icon:'🔬', thumb:'thumb-sci', title:'Science Class', class:'Class 1-5',link:'cour/6-8/science.html', subject:'sci', lessons:15,  progress:0, badge:'New', level:'middle' },
+  { icon:'🌍', thumb:'thumb-soc', title:'social Class', class:'Class 1-5',link:'cour/6-8/social.html', subject:'soc', lessons:15,  progress:0, badge:'New', level:'middle' },
+
+  
+  { icon:'தமிழ்', thumb:'thumb-tam', title:'Tamil Class', class:'Class 1-5',link:'cour/9-10/tamil.html', subject:'tam', lessons:15,  progress:0, badge:'New', level:'secondary' },
+  { icon:'🔤', thumb:'thumb-eng', title:'English Class', class:'Class 1-5',link:'cour/9-10/english.html', subject:'eng', lessons:15,  progress:0, badge:'New', level:'secondary' },
+  { icon:'📐', thumb:'thumb-math', title:'Mathematics Class', class:'Class 1-5',link:'cour/9-10/maths.html', subject:'math', lessons:15,progress:0, badge:'New', level:'secondary' },
+  { icon:'🔬', thumb:'thumb-sci', title:'Science Class', class:'Class 1-5',link:'cour/9-10/science.html', subject:'sci', lessons:15, progress:0, badge:'New', level:'secondary' },
+  { icon:'🌍', thumb:'thumb-soc', title:'social Class', class:'Class 1-5',link:'cour/9-10/social.html', subject:'soc', lessons:15, progress:0, badge:'New', level:'secondary' },
+
+
+  { icon:'📐', thumb:'thumb-math', title:'Maths Class 12 (CBSE)', class:'Class 12', subject:'math', lessons:36, desc:'Calculus, probability, vectors and 3D geometry for board exams.', progress:10, badge:'Board Prep', level:'senior' }
+];
+
+function renderCourses(filter = 'primary') {
+  const grid = document.getElementById('coursesGrid');
+  const filtered = filter === 'all' ? courses : courses.filter(c => c.level === filter);
+  grid.innerHTML = filtered.map(c => `
+    <div class="course-card">
+      <div class="course-thumb ${c.thumb}">
+        ${c.icon}
+        ${c.badge ? `<span class="course-badge">${c.badge}</span>` : ''}
+      </div>
+      <div class="course-body">
+        <div class="course-meta">
+          <span class="course-class">${c.class}</span>
+          <span class="course-lessons">${c.lessons} Lessons</span>
+        </div>
+        <h3>${c.title}</h3>
+        <p>${c.desc}</p>
+        ${c.progress > 0 ? `
+          <div class="progress-row">
+            <div class="progress-label"><span>Progress</span><span>${c.progress}%</span></div>
+            <div class="progress-track"><div class="progress-bar" data-progress="${c.progress}"></div></div>
+          </div>` : ''}
+        <a href="${c.link}" class="btn-enroll">
+  ${c.progress > 0 ? 'Continue Learning →' : 'Start Course →'}
+</a>
+      </div>
+    </div>`).join('');
+  // Init progress bars
+  setTimeout(() => {
+    document.querySelectorAll('.progress-bar').forEach(bar => {
+      bar.style.width = (bar.dataset.progress || 0) + '%';
+    });
+  }, 100);
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderCourses(btn.dataset.filter);
+  });
+});
+
+function enrollCourse(title) {
+  showToast(`✅ Enrolled in "${title}"!`, 'success');
+}
+
+renderCourses();
+</script>
+</body>
+</html>
