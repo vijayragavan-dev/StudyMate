@@ -1,4 +1,4 @@
-# 🌾 GramShiksha — Digital Learning Platform for Rural Students
+# 🌾 Studymate
 
 A full-stack digital learning platform built with **HTML/CSS/JS (Frontend)** and **Java Spring Boot (Backend)**, designed to bring quality NCERT-aligned education to rural students across India.
 
